@@ -3,12 +3,12 @@ import pygame_textinput
 import sys
 from LevelManager import *
 import Storage
-
+from math import floor
 
 #Initializing pygame variables
 pygame.init()
 pygame.font.init()
-font = pygame.font.SysFont('Comic Sans MS', 30)
+font = pygame.font.SysFont('Comic Sans MS', 40)
 pygame.display.set_caption("Level Up")
 
 canvas = pygame.display.set_mode((500, 500))  
@@ -24,14 +24,15 @@ levelManager = LevelManager(initialLevel, initialHistory)
 #UI Elements 
 redoButton = pygame.image.load("textures/redo.png")
 enterButton = pygame.image.load("textures/enter.png")
-xpText = font.render("Progress", False, (0,0,0))
-levelText = font.render("Level:" + str(levelManager.timeToLevel()), False, (0,0,0))
+xpText = font.render("Progress:", False, (0,0,0))
+levelText = font.render("Level:  " + str(floor(levelManager.timeToLevel())), False, (0,0,0))
+updateLevel = False
 
 
 #Program main loop
 while True:
     canvas.fill((225, 225, 225))
-    events = pygame.event.get([pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN, pygame.QUIT])
+    events = pygame.event.get()
     mousePosX, mousePosY = pygame.mouse.get_pos()
 
     #Update the text input
@@ -50,16 +51,15 @@ while True:
                     raise ValueError
                 
                 levelManager.addTime(input)
-                levelText = font.render("Level:" + str(levelManager.timeToLevel()), False, (0,0,0))
-                Storage.writeStorage(levelManager.timeSpent, levelManager.timeHistory)
+                updateLevel = True
             except:
-                print("error")
-            finally:
+                pass
+            finally: 
                 textInput.value = ""
 
         if (event.type == pygame.MOUSEBUTTONDOWN and mousePosX > 340 and mousePosX < 390 and mousePosY > 50 and mousePosY < 100):
             levelManager.undoEntry()
-            levelText = font.render("Level:" + str(levelManager.timeToLevel()), False, (0,0,0))
+            levelText = font.render("Level:  " + str(floor(levelManager.timeToLevel())), False, (0,0,0))
             Storage.writeStorage(levelManager.timeSpent, levelManager.timeHistory)
 
         # Press Quit button
@@ -72,9 +72,14 @@ while True:
 
     ### Update UI
     # Text Input
-    textInputSurface = pygame.Surface((210, 50))
-    textInputSurface.fill((255,255,255))
-    canvas.blit(textInputSurface, textInputSurface.get_rect(topleft = (50,50)))
+    if updateLevel:
+        levelText = font.render("Level:  " + str(floor(levelManager.timeToLevel())), False, (0,0,0))
+        Storage.writeStorage(levelManager.timeSpent, levelManager.timeHistory) 
+        updateLevel = False
+
+    textInputBackgroundSurface = pygame.Surface((210, 50))
+    textInputBackgroundSurface.fill((255,255,255))
+    canvas.blit(textInputBackgroundSurface, textInputBackgroundSurface.get_rect(topleft = (50,50)))
     canvas.blit(textInput.surface, (60, 62))
     
     # Buttons
@@ -82,8 +87,14 @@ while True:
     canvas.blit(enterButton, enterButton.get_rect(topleft = (420, 50)))
 
     # Xp Bar and Level
-    canvas.blit(xpText, (50, 300))
-    canvas.blit(levelText, (50, 350))
+    canvas.blit(levelText, (50, 200))
+    xpBackgroundSurface = pygame.Surface((400, 50))
+    xpBackgroundSurface.fill((255, 255, 255))
+    processValue = floor(400 * ((levelManager.timeToLevel()) - floor(levelManager.timeToLevel())))
+    xpProgressSurface = pygame.Surface((processValue, 50))
+    xpProgressSurface.fill((60, 225, 60))
+    canvas.blit(xpBackgroundSurface, xpBackgroundSurface.get_rect(topleft = (50, 270)))
+    canvas.blit(xpProgressSurface, xpProgressSurface.get_rect(topleft = (50, 270)))
     
     pygame.display.update()
     clock.tick(30)
