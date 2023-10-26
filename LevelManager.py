@@ -13,10 +13,14 @@ class LevelManager:
     # Takes a time spent in hours and returns a level value based
     # on a logarithmic function
     def timeToLevel(self):
-        level = (57 * log10(self.timeSpent + 12)) - 60
-        return level
+        temp = 0
+        if self.timeSpent <= 200:
+            return (100 * log10(self.timeSpent + 15.9)) - 120
+        else:
+            temp = 200 - self.timeSpent
+            return ((100 * log10(200 + 15.9)) - 120) + (0.2 * temp)
     
-    
+
     # Adds the amount of time added to the stack
     # If the stack is full, remove lowest element then push
     def addToHistory(self, newTime):
