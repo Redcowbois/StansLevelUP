@@ -4,6 +4,7 @@ import sys
 from LevelManager import *
 import Storage
 
+
 #Initializing pygame variables
 pygame.init()
 pygame.font.init()
@@ -14,9 +15,11 @@ canvas = pygame.display.set_mode((500, 500))
 clock = pygame.time.Clock()
 textInput = pygame_textinput.TextInputVisualizer(cursor_blink_interval=450)
 
+
 # Initializing LevelManager
 initialLevel, initialHistory = Storage.readStorage()
 levelManager = LevelManager(initialLevel, initialHistory)
+
 
 #UI Elements 
 redoButton = pygame.image.load("textures/redo.png")
@@ -28,7 +31,7 @@ levelText = font.render("Level:" + str(levelManager.timeToLevel()), False, (0,0,
 #Program main loop
 while True:
     canvas.fill((225, 225, 225))
-    events = pygame.event.get()
+    events = pygame.event.get([pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN, pygame.QUIT])
     mousePosX, mousePosY = pygame.mouse.get_pos()
 
     #Update the text input
@@ -38,6 +41,7 @@ while True:
 
     #Check events
     for event in events:
+        # Press enter (keyboard or button)
         if ((event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN) 
         or (event.type == pygame.MOUSEBUTTONDOWN and mousePosX > 420 and mousePosX < 470 and mousePosY > 50 and mousePosY < 100)):
             try: 
@@ -53,7 +57,12 @@ while True:
             finally:
                 textInput.value = ""
 
+        if (event.type == pygame.MOUSEBUTTONDOWN and mousePosX > 340 and mousePosX < 390 and mousePosY > 50 and mousePosY < 100):
+            levelManager.undoEntry()
+            levelText = font.render("Level:" + str(levelManager.timeToLevel()), False, (0,0,0))
+            Storage.writeStorage(levelManager.timeSpent, levelManager.timeHistory)
 
+        # Press Quit button
         if event.type == pygame.QUIT:
             Storage.writeStorage(levelManager.timeSpent, levelManager.timeHistory)
             pygame.quit()

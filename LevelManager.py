@@ -27,11 +27,13 @@ class LevelManager:
             self.timeHistory.append(newTime)
 
 
-    # Removes from history stack
+    # Removes from history stack and removes that value from timeSpent
     # Returns -1 if empty    
-    def removeFromHistory(self):
+    def undoEntry(self):
         if self.timeHistory:
-            return self.timeHistory.pop()
+            value = self.timeHistory.pop()
+            self.timeSpent = self.timeSpent - value
+            return value
         else:
             return -1
 
