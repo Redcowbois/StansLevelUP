@@ -1,6 +1,6 @@
 import re
 
-#Return: (int, int list)
+#Return: (float, float list)
 # Reads what is in the storage txt file
 def readStorage():
     try: #See if file exists
@@ -8,17 +8,17 @@ def readStorage():
 
     except: #If file doesn't exist -> default values
         print("File doesn't exist")
-        returnValue = (0, [0])
+        returnValue = (0.0, [0.0])
     
     else: #If file exists -> get values
         print("File already exists")
-        storedLevel = int(currentFile.readline()[:-1])
+        storedLevel = float(currentFile.readline()[:-1])
 
         storedHistory = currentFile.readline()
         if re.search(r"[0:9]", storedHistory) != None: 
             storedHistory = storedHistory.split(",")
             for i in range(len(storedHistory)):
-                storedHistory[i] = int(storedHistory[i])
+                storedHistory[i] = float(storedHistory[i])
         else:
             storedHistory = []
 

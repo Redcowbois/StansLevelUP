@@ -1,9 +1,10 @@
 from numpy import log10 
+from math import floor
 
 class LevelManager:
     # Args: 
-    # timeSpent = int
-    # timeHistory = int list of size 5
+    # timeSpent = float
+    # timeHistory = float list of size 5
     def __init__(self, timeSpent, timeHistory):
         self.timeSpent = timeSpent
         self.timeHistory = timeHistory
@@ -12,14 +13,14 @@ class LevelManager:
     # Takes a time spent in hours and returns a level value based
     # on a logarithmic function
     def timeToLevel(self):
-        level = (57 * log10(self.timeSpent + 12)) - 60
+        level = floor((57 * log10(self.timeSpent + 12)) - 60)
         return level
     
 
     # Adds the amount of time added to the stack
     # If the stack is full, remove lowest element then push
     def addToHistory(self, newTime):
-        if self.timeHistory.size() < 5:
+        if len(self.timeHistory) < 5:
             self.timeHistory.append(newTime)
         else:
             self.timeHistory.pop(0)
@@ -38,7 +39,7 @@ class LevelManager:
     # Add a time in hours to the total and to the history stack
     def addTime(self, newTime):
         self.addToHistory(newTime)
-        return self.timeSpent + newTime
+        self.timeSpent = self.timeSpent + newTime
     
 
 
