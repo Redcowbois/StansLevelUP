@@ -15,10 +15,10 @@ class LevelManager:
     def timeToLevel(self):
         temp = 0
         if self.timeSpent <= 200:
-            return (100 * log10(self.timeSpent + 15.9)) - 120
+            return (100 * log10(self.timeSpent + 30)) - 147.7
         else:
-            temp = 200 - self.timeSpent
-            return ((100 * log10(200 + 15.9)) - 120) + (0.2 * temp)
+            temp = self.timeSpent - 200
+            return ((100 * log10(200 + 30)) - 147.7) + (0.1 * temp)
     
 
     # Adds the amount of time added to the stack

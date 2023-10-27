@@ -8,10 +8,10 @@ from math import floor
 #Initializing pygame variables
 pygame.init()
 pygame.font.init()
-font = pygame.font.SysFont('Comic Sans MS', 40)
+font = pygame.font.SysFont('Comic Sans MS', 30)
 pygame.display.set_caption("Level Up")
 
-canvas = pygame.display.set_mode((500, 500))  
+canvas = pygame.display.set_mode((500, 270))  
 clock = pygame.time.Clock()
 textInput = pygame_textinput.TextInputVisualizer(cursor_blink_interval=450)
 
@@ -63,7 +63,7 @@ while True:
             Storage.writeStorage(levelManager.timeSpent, levelManager.timeHistory)
 
         # Press Quit button
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             Storage.writeStorage(levelManager.timeSpent, levelManager.timeHistory)
             pygame.quit()
             sys.exit()
@@ -87,14 +87,14 @@ while True:
     canvas.blit(enterButton, enterButton.get_rect(topleft = (420, 50)))
 
     # Xp Bar and Level
-    canvas.blit(levelText, (50, 200))
+    canvas.blit(levelText, (50, 130))
     xpBackgroundSurface = pygame.Surface((400, 50))
     xpBackgroundSurface.fill((255, 255, 255))
     processValue = floor(400 * ((levelManager.timeToLevel()) - floor(levelManager.timeToLevel())))
     xpProgressSurface = pygame.Surface((processValue, 50))
     xpProgressSurface.fill((60, 225, 60))
-    canvas.blit(xpBackgroundSurface, xpBackgroundSurface.get_rect(topleft = (50, 270)))
-    canvas.blit(xpProgressSurface, xpProgressSurface.get_rect(topleft = (50, 270)))
+    canvas.blit(xpBackgroundSurface, xpBackgroundSurface.get_rect(topleft = (50, 175)))
+    canvas.blit(xpProgressSurface, xpProgressSurface.get_rect(topleft = (50, 175)))
     
     pygame.display.update()
     clock.tick(30)
