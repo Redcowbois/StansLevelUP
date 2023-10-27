@@ -2,3 +2,4 @@ test*
 __pycache__/
 temp*
 storage.txt
+output/

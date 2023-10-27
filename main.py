@@ -8,9 +8,10 @@ from math import floor
 #Initializing pygame variables
 pygame.init()
 pygame.font.init()
-font = pygame.font.SysFont('Comic Sans MS', 30)
 pygame.display.set_caption("Level Up")
+pygame.display.set_icon(pygame.image.load("textures/icon.png"))
 
+font = pygame.font.SysFont("Comic Sans MS'", 30)
 canvas = pygame.display.set_mode((500, 270))  
 clock = pygame.time.Clock()
 textInput = pygame_textinput.TextInputVisualizer(cursor_blink_interval=450)
@@ -24,8 +25,9 @@ levelManager = LevelManager(initialLevel, initialHistory)
 #UI Elements 
 redoButton = pygame.image.load("textures/redo.png")
 enterButton = pygame.image.load("textures/enter.png")
-xpText = font.render("Progress:", False, (0,0,0))
-levelText = font.render("Level:  " + str(floor(levelManager.timeToLevel())), False, (0,0,0))
+xpText = font.render("Progress:", False, (0, 0, 0))
+levelText = font.render("Level:  " + str(floor(levelManager.timeToLevel())), False, (0, 0, 0))
+hourText = font.render("Total Hours:  " + str(floor(levelManager.timeSpent)), False, (0, 0, 0))
 updateLevel = False
 
 
@@ -60,6 +62,7 @@ while True:
         if (event.type == pygame.MOUSEBUTTONDOWN and mousePosX > 340 and mousePosX < 390 and mousePosY > 50 and mousePosY < 100):
             levelManager.undoEntry()
             levelText = font.render("Level:  " + str(floor(levelManager.timeToLevel())), False, (0,0,0))
+            hourText = font.render("Total Hours:  " + str(floor(levelManager.timeSpent)), False, (0, 0, 0))
             Storage.writeStorage(levelManager.timeSpent, levelManager.timeHistory)
 
         # Press Quit button
@@ -74,6 +77,7 @@ while True:
     # Text Input
     if updateLevel:
         levelText = font.render("Level:  " + str(floor(levelManager.timeToLevel())), False, (0,0,0))
+        hourText = font.render("Total Hours:  " + str(floor(levelManager.timeSpent)), False, (0, 0, 0))
         Storage.writeStorage(levelManager.timeSpent, levelManager.timeHistory) 
         updateLevel = False
 
@@ -88,6 +92,8 @@ while True:
 
     # Xp Bar and Level
     canvas.blit(levelText, (50, 130))
+    canvas.blit(hourText, (50, 5))
+
     xpBackgroundSurface = pygame.Surface((400, 50))
     xpBackgroundSurface.fill((255, 255, 255))
     processValue = floor(400 * ((levelManager.timeToLevel()) - floor(levelManager.timeToLevel())))
